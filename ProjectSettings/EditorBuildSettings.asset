@@ -4,4 +4,7 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/SamplesScenes/Vuforia-3-UserDefinedTargets.unity
+    guid: dae9d2707f6ab2543a91b5b082854447
