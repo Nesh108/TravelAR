@@ -24,9 +24,12 @@ public class InteractionHandler : MonoBehaviour
 	public AudioSource player;
 	public AudioClip[] audios;
 
+	public List<String> droppables;
+
 	// Use this for initialization
 	void Start ()
 	{
+		droppables = new List<String> ();
 		textbox = GameObject.FindGameObjectWithTag ("Label");
 		droppedBy = GetComponentInChildren<TextMesh> ();
 		textboxImage = textbox.GetComponent<UnityEngine.UI.Image> ();
@@ -85,7 +88,7 @@ public class InteractionHandler : MonoBehaviour
 				if (player.isPlaying) {
 					player.Stop ();
 				} else {
-					if (Drops [0].Content.Equals ("helloangelhack")) {
+					if (Drops [0].Content.Contains ("helloangelhack")) {
 						a = audios [0];
 					} else {
 						a = null;
@@ -118,33 +121,36 @@ public class InteractionHandler : MonoBehaviour
 		if (interactType.Equals (InteractableType.MAIN)) {
 			GameObject go = null;
 			foreach (Droppable d in Drops) {
-				switch (d.Dt) {
-				case DroppableType.TEXT:
-					go = Instantiate (TextPrefab, d.Position, Quaternion.identity, DroppableGO.transform);
-					break;
-				case DroppableType.IMAGE:
-					go = Instantiate (ImagePrefab, d.Position, Quaternion.identity, DroppableGO.transform);
-					byte[] img = System.Convert.FromBase64String (d.Content);
-					Texture2D tex = new Texture2D (400, 400);
-					tex.LoadImage (img);
-					Sprite s = Sprite.Create (tex, new Rect (0, 0, tex.width, tex.height), new Vector2 ());
-					go.GetComponentInChildren<SpriteRenderer>().sprite = s;
-					break;
-				case DroppableType.AUDIO:
-					go = Instantiate (AudioPrefab, d.Position, Quaternion.identity, DroppableGO.transform);
-					break;
-				case DroppableType.EMOJI:
-					go = Instantiate (EmojiPrefab, d.Position, Quaternion.identity, DroppableGO.transform);
-					if(d.Content.Equals("smiley")) {
-						Debug.Log("Got Smiley");
+				if (!droppables.Contains (d.Marker)) {
+					droppables.Add (d.Marker);
+					switch (d.Dt) {
+					case DroppableType.TEXT:
+						go = Instantiate (TextPrefab, d.Position, Quaternion.identity, DroppableGO.transform);
+						break;
+					case DroppableType.IMAGE:
+						go = Instantiate (ImagePrefab, d.Position, Quaternion.identity, DroppableGO.transform);
+						byte[] img = System.Convert.FromBase64String (d.Content);
+						Texture2D tex = new Texture2D (400, 400);
+						tex.LoadImage (img);
+						Sprite s = Sprite.Create (tex, new Rect (0, 0, tex.width, tex.height), new Vector2 ());
+						go.GetComponentInChildren<SpriteRenderer> ().sprite = s;
+						break;
+					case DroppableType.AUDIO:
+						go = Instantiate (AudioPrefab, d.Position, Quaternion.identity, DroppableGO.transform);
+						break;
+					case DroppableType.EMOJI:
+						go = Instantiate (EmojiPrefab, d.Position, Quaternion.identity, DroppableGO.transform);
+						if (d.Content.Equals ("smiley")) {
+							Debug.Log ("Got Smiley");
+						}
+						break;
 					}
-					break;
-				}
 
-				if (go != null) {
-					go.transform.localRotation = new Quaternion (0, 0, 0, 0);
-					go.transform.localPosition = d.Position;
-					go.name = d.Marker;
+					if (go != null) {
+						go.transform.localRotation = new Quaternion (0, 0, 0, 0);
+						go.transform.localPosition = d.Position;
+						go.name = d.Marker;
+					}
 				}
 
 			}

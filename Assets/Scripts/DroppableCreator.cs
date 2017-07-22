@@ -6,25 +6,45 @@ using System.Collections.Generic;
 public class DroppableCreator: MonoBehaviour
 {
 	public GameObject CreatorBox;
-
+	public UnityEngine.UI.InputField message;
+	public MeshRenderer mrSign;
+	public MeshRenderer mrWelcome;
+	
 	public IEnumerator CreateDroppable (string parent, string marker, string type, string username, string content, string position)
 	{
-		string url = "http://10.2.12.162/travelar/create-drop.php";
-		string paramters = "?parent=" + parent + "&marker=" + marker + "&username=" + username + "&position=" + position;
+		string url = "http://10.2.12.162/travelar/create-drop.php?";
+		string paramters = "parent=" + WWW.EscapeURL(parent) + "&marker=" + WWW.EscapeURL(marker)+ "&content=" + WWW.EscapeURL(content) + "&type=" + WWW.EscapeURL(type) + "&username=" + WWW.EscapeURL(username) + "&position=" + WWW.EscapeURL(position);
 		WWW www = new WWW (url + paramters);
 		yield return www;
 
 		// check for errors
 		if (www.error == null) {
 			Debug.Log ("Success! " + www.text);
+			GameObject.FindObjectOfType<InteractionHandler>().SpawnDroppables ();
+			ShowCreator ();
+
 		} else {
 			Debug.Log ("WWW Error: " + www.error);
 		}
 	}
 
 	public void CreateDroppable() {
-		//StartCoroutine (CreateDroppable ());
+		Debug.Log (message.text);
 
+		string parent = "";
+		Vector3 pos = Vector3.zero;
+
+		if(mrSign.enabled) {
+			pos = mrSign.gameObject.transform.parent.transform.position;
+			parent = "sign";
+		} else if (mrWelcome.enabled) {
+			pos = mrWelcome.gameObject.transform.parent.transform.position;
+			parent = "welcome";
+		}
+
+		if (!parent.Equals ("")) {
+			StartCoroutine (CreateDroppable (parent, "TEXT#" + DateTime.Now, "text", "Nesh", message.text, pos.x + "," + pos.y + "," + (pos.z -1)));	
+		}
 	}
 
 	public void ShowCreator() {
