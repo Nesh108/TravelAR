@@ -2,6 +2,7 @@
 
 $config = require('./config.php');
 
+$parent = $_GET['parent'];
 $marker = $_GET['marker'];
 $type = $_GET['type'];
 $username = $_GET['username'];
@@ -10,8 +11,12 @@ $position = $_GET['position'];
 
 $errors = [];
 
+if(!isset($parent)) {
+	$errors[] = 'Parent is required. Parent should be a string.';
+}
+
 if(!isset($marker)) {
-	$errors[] = 'Marker is required. Marker should be an integer.';
+	$errors[] = 'Marker is required. Marker should be a string.';
 }
 
 if(!isset($type)) {
