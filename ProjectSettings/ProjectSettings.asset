@@ -6,7 +6,7 @@ PlayerSettings:
   serializedVersion: 11
   productGUID: 1ec436bd7982c45b386031288ee28766
   AndroidProfiler: 0
-  defaultScreenOrientation: 4
+  defaultScreenOrientation: 0
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
@@ -498,7 +498,7 @@ PlayerSettings:
   webGLCompressionFormat: 1
   scriptingDefineSymbols:
     4: VUFORIA_IOS_SETTINGS
-    7: VUFORIA_ANDROID_SETTINGS
+    7: VUFORIA_ANDROID_SETTINGS;VUFORIA_SAMPLE_ORIENTATION_SETTINGS
     14: VUFORIA_WSA_SETTINGS
   platformArchitecture: {}
   scriptingBackend: {}
