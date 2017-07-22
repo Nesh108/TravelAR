@@ -14,16 +14,26 @@ public class InteractionHandler : MonoBehaviour {
 	private UnityEngine.UI.Image textboxImage;
 	private bool activated = false;
 	private TextMesh droppedBy;
+	private SpriteRenderer spriteImage;
 
 	// Use this for initialization
 	void Start () {
 		textbox = GameObject.FindGameObjectWithTag ("Label");
 		droppedBy = GetComponentInChildren<TextMesh> ();
+		spriteImage = GetComponentInChildren<SpriteRenderer> ();
 		textboxImage = textbox.GetComponent<UnityEngine.UI.Image> ();
 		Drops = DroppableFetcher.FetchSpecificDroppables (gameObject.name);
 		label = GameObject.FindObjectOfType<UnityEngine.UI.Text> ();
+
+		if (spriteImage != null && interactType.Equals(InteractableType.DROPPABLE) && Drops[0].Dt.Equals(DroppableType.IMAGE)) {
+			byte[] img = System.Convert.FromBase64String(Drops[0].Content);
+			Texture2D tex = new Texture2D (400, 400);
+			tex.LoadImage (img);
+			Sprite s = Sprite.Create (tex, new Rect (0, 0, tex.width, tex.height), new Vector2());
+			spriteImage.sprite = s;
+		}
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 		if((Input.touchCount>0 && Input.GetTouch(0).phase==TouchPhase.Began) || Input.GetMouseButtonDown(0))
