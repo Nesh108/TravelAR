@@ -41,7 +41,8 @@ public class InteractionHandler : MonoBehaviour {
 				} else {
 					activated = false;
 					if (interactType.Equals (InteractableType.DROPPABLE)) {
-						if (Drops [0].Dt.Equals (DroppableType.TEXT)) {
+						if (Drops [0].Dt.Equals (DroppableType.TEXT) && !hit.collider.name.Contains("TEXT#")) {
+							Debug.LogWarning ("Disabling shit");
 							textboxImage.enabled = false;
 							label.text = "";
 						} else if (Drops [0].Dt.Equals (DroppableType.IMAGE)) {
