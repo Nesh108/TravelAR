@@ -84,8 +84,7 @@ public class UDTEventHandler : MonoBehaviour, IUserDefinedTargetEventHandler
     /// </summary>
     public void OnFrameQualityChanged(ImageTargetBuilder.FrameQuality frameQuality)
     {
-        Debug.Log("Frame quality changed: " + frameQuality.ToString());
-        mFrameQuality = frameQuality;
+         mFrameQuality = frameQuality;
         if (mFrameQuality == ImageTargetBuilder.FrameQuality.FRAME_QUALITY_LOW)
         {
             Debug.Log("Low camera image quality");

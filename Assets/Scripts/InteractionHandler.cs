@@ -15,51 +15,49 @@ public class InteractionHandler : MonoBehaviour
 	private UnityEngine.UI.Image textboxImage;
 	private bool activated = false;
 	private TextMesh droppedBy;
-	private SpriteRenderer spriteImage;
 
 	public GameObject TextPrefab;
 	public GameObject ImagePrefab;
 	public GameObject AudioPrefab;
 	public GameObject EmojiPrefab;
 
+	public AudioSource player;
+	public AudioClip[] audios;
+
 	// Use this for initialization
 	void Start ()
 	{
 		textbox = GameObject.FindGameObjectWithTag ("Label");
 		droppedBy = GetComponentInChildren<TextMesh> ();
-		spriteImage = GetComponentInChildren<SpriteRenderer> ();
 		textboxImage = textbox.GetComponent<UnityEngine.UI.Image> ();
 		StartCoroutine (DroppableFetcher.FetchSpecificDroppables (this, gameObject.name, interactType.Equals (InteractableType.MAIN)));
-		label = GameObject.FindObjectOfType<UnityEngine.UI.Text> ();
-
-		if (spriteImage != null && interactType.Equals (InteractableType.DROPPABLE) && Drops [0].Dt.Equals (DroppableType.IMAGE)) {
-			byte[] img = System.Convert.FromBase64String (Drops [0].Content);
-			Texture2D tex = new Texture2D (400, 400);
-			tex.LoadImage (img);
-			Sprite s = Sprite.Create (tex, new Rect (0, 0, tex.width, tex.height), new Vector2 ());
-			spriteImage.sprite = s;
-		}
+		label = textbox.GetComponentInChildren<UnityEngine.UI.Text> ();
+		player = FindObjectOfType<AudioSource> ();
 	}
 
 	// Update is called once per frame
 	void Update ()
 	{
-		if ((Input.touchCount > 0 && Input.GetTouch (0).phase == TouchPhase.Began) || Input.GetMouseButtonDown (0)) {
+		Ray ray = new Ray();
+		bool clicked;
 			#if UNITY_EDITOR
-			Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+				clicked = Input.GetMouseButtonDown (0);
+				ray = Camera.main.ScreenPointToRay (Input.mousePosition);
 			#elif UNITY_ANDROID
-				Ray ray = Camera.main.ScreenPointToRay (Input.GetTouch(0).position);
+				clicked = Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began;
+				if(Input.touchCount > 0){
+					ray = Camera.main.ScreenPointToRay (Input.GetTouch(0).position);
+				}
 			#endif
-
+		if (clicked) {
 			RaycastHit hit;
 			if (Physics.Raycast (ray, out hit, Mathf.Infinity)) {
 				if (hit.collider.name.Equals (gameObject.name)) {
 					StartCoroutine (HandleClick (hit.collider.name));
 				} else {
-					activated = false;
 					if (interactType.Equals (InteractableType.DROPPABLE)) {
+						activated = false;
 						if (Drops [0].Dt.Equals (DroppableType.TEXT) && !hit.collider.name.Contains ("TEXT#")) {
-							Debug.LogWarning ("Disabling shit");
 							textboxImage.enabled = false;
 							label.text = "";
 						} else if (Drops [0].Dt.Equals (DroppableType.IMAGE)) {
@@ -79,9 +77,21 @@ public class InteractionHandler : MonoBehaviour
 			activated = !activated;
 			if (Drops.Count > 0 && Drops [0].Dt.Equals (DroppableType.TEXT)) {
 				textboxImage.enabled = activated;
-				label.text = textboxImage.enabled ? Drops [0].UserName + ": " + SpliceText (Drops [0].Content, 20) : "";
+				label.text = textboxImage.enabled ? "<b>" + Drops [0].UserName + "</b>: " + SpliceText (Drops [0].Content, 35) : "";
 			} else if (Drops.Count > 0 && Drops [0].Dt.Equals (DroppableType.IMAGE)) {
 				droppedBy.text = activated ? Drops [0].UserName : "";
+			} else if (Drops.Count > 0 && Drops [0].Dt.Equals (DroppableType.AUDIO)) {
+				AudioClip a;
+				if (player.isPlaying) {
+					player.Stop ();
+				} else {
+					if (Drops [0].Content.Equals ("helloangelhack")) {
+						a = audios [0];
+					} else {
+						a = null;
+					}
+					player.Play ();
+				}
 			}
 		}
 		yield break;
@@ -114,16 +124,26 @@ public class InteractionHandler : MonoBehaviour
 					break;
 				case DroppableType.IMAGE:
 					go = Instantiate (ImagePrefab, d.Position, Quaternion.identity, DroppableGO.transform);
+					byte[] img = System.Convert.FromBase64String (d.Content);
+					Texture2D tex = new Texture2D (400, 400);
+					tex.LoadImage (img);
+					Sprite s = Sprite.Create (tex, new Rect (0, 0, tex.width, tex.height), new Vector2 ());
+					go.GetComponentInChildren<SpriteRenderer>().sprite = s;
 					break;
 				case DroppableType.AUDIO:
 					go = Instantiate (AudioPrefab, d.Position, Quaternion.identity, DroppableGO.transform);
 					break;
 				case DroppableType.EMOJI:
 					go = Instantiate (EmojiPrefab, d.Position, Quaternion.identity, DroppableGO.transform);
+					if(d.Content.Equals("smiley")) {
+						Debug.Log("Got Smiley");
+					}
 					break;
 				}
 
 				if (go != null) {
+					go.transform.localRotation = new Quaternion (0, 0, 0, 0);
+					go.transform.localPosition = d.Position;
 					go.name = d.Marker;
 				}
 

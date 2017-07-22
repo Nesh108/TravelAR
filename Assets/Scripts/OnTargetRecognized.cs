@@ -7,13 +7,11 @@ public class OnTargetRecognized : MonoBehaviour
 	public InteractionHandler ihscript;
 	public bool initialized = false;
 	private MeshRenderer _mr;
-	private UnityEngine.UI.Text GPSLabel;
 
 	// Use this for initialization
 	void Start ()
 	{
 		ihscript = GetComponent<InteractionHandler> ();
-		GPSLabel = GameObject.FindObjectOfType<UnityEngine.UI.Text> ();
 		StartCoroutine (StartGPS ());
 		_mr = GetComponent<MeshRenderer> ();
 	}
@@ -57,8 +55,6 @@ public class OnTargetRecognized : MonoBehaviour
 			Debug.Log ("Unable to determine device location");
 			yield break;
 		}
-
-		Debug.Log ("Location: " + Input.location.lastData.latitude + " " + Input.location.lastData.longitude + " " + Input.location.lastData.altitude + " " + Input.location.lastData.horizontalAccuracy + " " + Input.location.lastData.timestamp);
 
 	}
 

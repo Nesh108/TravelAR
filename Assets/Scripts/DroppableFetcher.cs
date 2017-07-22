@@ -14,7 +14,7 @@ public class DroppableFetcher: MonoBehaviour
 
 		// check for errors
 		if (www.error == null) {
-			ihscript.Drops = processData (www.data, id, isParent);
+			ihscript.Drops = processData (www.text, id, isParent);
 			ihscript.SpawnDroppables ();
 
 		} else {
