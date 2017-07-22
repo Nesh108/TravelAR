@@ -107,3 +107,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   interactType: 1
   DroppableGO: {fileID: 0}
+  TextPrefab: {fileID: 0}
+  ImagePrefab: {fileID: 0}
+  AudioPrefab: {fileID: 0}
+  EmojiPrefab: {fileID: 0}
