@@ -20,7 +20,14 @@ public class DroppableCreator: MonoBehaviour
 		// check for errors
 		if (www.error == null) {
 			Debug.Log ("Success! " + www.text);
-			GameObject.FindObjectOfType<InteractionHandler>().SpawnDroppables ();
+			InteractionHandler[] ihscripts = GameObject.FindObjectsOfType<InteractionHandler> ();
+			foreach (InteractionHandler hs in ihscripts) {
+				if (hs.enabled && hs.gameObject.name.Equals(parent)) {
+					StartCoroutine (DroppableFetcher.FetchSpecificDroppables (hs, parent, true));
+				}
+			}
+
+
 			ShowCreator ();
 
 		} else {
@@ -29,8 +36,6 @@ public class DroppableCreator: MonoBehaviour
 	}
 
 	public void CreateDroppable() {
-		Debug.Log (message.text);
-
 		string parent = "";
 		Vector3 pos = Vector3.zero;
 

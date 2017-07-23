@@ -865,7 +865,7 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: sign_iconMaterial
+  m_Name: welcomeMaterial
   m_Shader: {fileID: 10752, guid: 0000000000000000f000000000000000, type: 0}
   m_ShaderKeywords: 
   m_LightmapFlags: 5
@@ -2136,7 +2136,8 @@ MonoBehaviour:
   EmojiPrefab: {fileID: 1028870175294796, guid: 21de22c194cf742388e442d1664c717e,
     type: 2}
   player: {fileID: 943656155}
-  audios: []
+  audios:
+  - {fileID: 8300000, guid: 2d8e06db74d7044b48ffeda739e60b31, type: 3}
   droppables: []
 --- !u!114 &1164457012
 MonoBehaviour:
@@ -3140,7 +3141,8 @@ MonoBehaviour:
   EmojiPrefab: {fileID: 1028870175294796, guid: 21de22c194cf742388e442d1664c717e,
     type: 2}
   player: {fileID: 943656155}
-  audios: []
+  audios:
+  - {fileID: 8300000, guid: 2d8e06db74d7044b48ffeda739e60b31, type: 3}
   droppables: []
 --- !u!23 &1815935656 stripped
 MeshRenderer:

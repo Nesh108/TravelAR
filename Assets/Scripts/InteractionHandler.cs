@@ -88,12 +88,12 @@ public class InteractionHandler : MonoBehaviour
 				if (player.isPlaying) {
 					player.Stop ();
 				} else {
-					if (Drops [0].Content.Contains ("helloangelhack")) {
+					if (Drops [0].Content.Contains ("helloangelhack") && audios.Length > 0) {
 						a = audios [0];
+						player.Play ();
 					} else {
 						a = null;
 					}
-					player.Play ();
 				}
 			}
 		}
@@ -122,10 +122,11 @@ public class InteractionHandler : MonoBehaviour
 			GameObject go = null;
 			foreach (Droppable d in Drops) {
 				if (!droppables.Contains (d.Marker)) {
+					Debug.Log ("Fetching: " + d.Marker);
 					droppables.Add (d.Marker);
 					switch (d.Dt) {
 					case DroppableType.TEXT:
-						go = Instantiate (TextPrefab, d.Position, new Quaternion(180,0,0,0), DroppableGO.transform);
+						go = Instantiate (TextPrefab, d.Position, new Quaternion(90,0,0,0), DroppableGO.transform);
 						break;
 					case DroppableType.IMAGE:
 						go = Instantiate (ImagePrefab, d.Position, Quaternion.identity, DroppableGO.transform);
@@ -136,19 +137,19 @@ public class InteractionHandler : MonoBehaviour
 						go.GetComponentInChildren<SpriteRenderer> ().sprite = s;
 						break;
 					case DroppableType.AUDIO:
-						go = Instantiate (AudioPrefab, d.Position, Quaternion.identity, DroppableGO.transform);
+						go = Instantiate (AudioPrefab, d.Position, new Quaternion (90, 0, 0, 0), DroppableGO.transform);
+						go.GetComponentInChildren<TextMesh> ().text = d.UserName;
 						break;
 					case DroppableType.EMOJI:
 						go = Instantiate (EmojiPrefab, d.Position, Quaternion.identity, DroppableGO.transform);
-						if (d.Content.Equals ("smiley")) {
-							Debug.Log ("Got Smiley");
-						}
 						break;
 					}
 
 					if (go != null) {
 						go.transform.localPosition = d.Position;
-						if (!d.Dt.Equals (DroppableType.TEXT)) {
+						if (d.Dt.Equals (DroppableType.IMAGE)) {
+							go.transform.localRotation = new Quaternion (0, 0, 0, 0);
+						} else if (d.Dt.Equals (DroppableType.EMOJI)) {
 							go.transform.localRotation = new Quaternion (0, 0, 0, 0);
 						}
 
