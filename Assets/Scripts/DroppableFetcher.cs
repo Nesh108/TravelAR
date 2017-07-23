@@ -8,7 +8,7 @@ public class DroppableFetcher: MonoBehaviour
 {
 	static public IEnumerator FetchSpecificDroppables (InteractionHandler ihscript, string id, bool isParent)
 	{
-		string url = "http://10.2.12.162/travelar/drop.php";
+		string url = "http://" + Droppable.IP + "/travelar/drop.php";
 		WWW www = new WWW (url);
 		yield return www;
 
@@ -47,17 +47,12 @@ public class DroppableFetcher: MonoBehaviour
 		switch (type) {
 		case "text":
 			return DroppableType.TEXT;
-			break;
 		case "image":
 			return DroppableType.IMAGE;
-			break;
 		case "audio":
 			return DroppableType.AUDIO;
-			break;
 		case "emoji":
 			return DroppableType.EMOJI;
-			break;
-			
 		}
 		return DroppableType.TEXT;
 	}

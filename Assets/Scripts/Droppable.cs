@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class Droppable
 {	
+	public static string IP = "192.168.3.28";//"10.2.12.162";
 	public string Parent;
 	public string Marker;
 	public DroppableType Dt;

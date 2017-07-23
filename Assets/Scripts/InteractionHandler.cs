@@ -125,7 +125,7 @@ public class InteractionHandler : MonoBehaviour
 					droppables.Add (d.Marker);
 					switch (d.Dt) {
 					case DroppableType.TEXT:
-						go = Instantiate (TextPrefab, d.Position, Quaternion.identity, DroppableGO.transform);
+						go = Instantiate (TextPrefab, d.Position, new Quaternion(180,0,0,0), DroppableGO.transform);
 						break;
 					case DroppableType.IMAGE:
 						go = Instantiate (ImagePrefab, d.Position, Quaternion.identity, DroppableGO.transform);
@@ -147,8 +147,11 @@ public class InteractionHandler : MonoBehaviour
 					}
 
 					if (go != null) {
-						go.transform.localRotation = new Quaternion (0, 0, 0, 0);
 						go.transform.localPosition = d.Position;
+						if (!d.Dt.Equals (DroppableType.TEXT)) {
+							go.transform.localRotation = new Quaternion (0, 0, 0, 0);
+						}
+
 						go.name = d.Marker;
 					}
 				}

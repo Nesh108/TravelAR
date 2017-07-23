@@ -12,7 +12,7 @@ public class DroppableCreator: MonoBehaviour
 	
 	public IEnumerator CreateDroppable (string parent, string marker, string type, string username, string content, string position)
 	{
-		string url = "http://10.2.12.162/travelar/create-drop.php?";
+		string url = "http://" + Droppable.IP + "/travelar/create-drop.php?";
 		string paramters = "parent=" + WWW.EscapeURL(parent) + "&marker=" + WWW.EscapeURL(marker)+ "&content=" + WWW.EscapeURL(content) + "&type=" + WWW.EscapeURL(type) + "&username=" + WWW.EscapeURL(username) + "&position=" + WWW.EscapeURL(position);
 		WWW www = new WWW (url + paramters);
 		yield return www;
